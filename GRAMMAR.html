@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Grammar Check Game</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.4.19/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            flex: 1;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-base-200">
+    <div class="navbar bg-primary text-primary-content shadow-lg">
+        <div class="flex-1">
+            <a class="btn btn-ghost normal-case text-xl">Grammar Check Game</a>
+        </div>
+        <div class="flex-none">
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost rounded-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.27-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </label>
+                <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4 text-base-content">
+                    <li>
+                        <button id="theme-toggle">
+                            Toggle Theme
+                        </button>
+                    </li>
+                    <li>
+                        <button id="language-toggle">
+                            Switch to English
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="card bg-base-100 shadow-xl max-w-md mx-auto fade-in">
+            <div class="card-body">
+                <h2 class="card-title text-center" id="welcome-title">เกมทดสอบไวยากรณ์ภาษาอังกฤษ</h2>
+                <p id="welcome-text">ทดสอบความรู้ไวยากรณ์ภาษาอังกฤษของคุณด้วยคำถามสุ่มจากอินเทอร์เน็ต เลือกคำตอบที่ถูกต้องและดูผลลัพธ์ทันที!</p>
+                <div class="card-actions justify-center mt-4">
+                    <button class="btn btn-primary" id="start-button">เริ่มเกม</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="hidden">
+            <div class="stats shadow bg-base-100 w-full mb-6">
+                <div class="stat">
+                    <div class="stat-title" id="score-title">คะแนน</div>
+                    <div class="stat-value text-primary" id="score">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-title" id="questions-title">คำถาม</div>
+                    <div class="stat-value" id="question-count">0</div>
+                </div>
+            </div>
+
+            <div class="card bg-base-100 shadow-xl mb-6 fade-in">
+                <div class="card-body">
+                    <h2 class="card-title" id="question-title">คำถาม</h2>
+                    <p id="question-text" class="text-lg my-4"></p>
+                    <div id="options" class="grid grid-cols-1 gap-2 mt-2">
+                        <!-- Options will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Card -->
+            <div id="result-card" class="card hidden mb-6">
+                <div class="card-body">
+                    <h2 class="card-title" id="result-title">ผลลัพธ์</h2>
+                    <p id="result-text" class="text-lg"></p>
+                    <div id="tip-container" class="bg-base-200 p-4 rounded-lg mt-2 hidden">
+                        <h3 class="font-bold" id="tip-title">เคล็ดลับ</h3>
+                        <p id="tip-text"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center space-x-4 mt-4">
+                <button id="next-button" class="btn btn-primary hidden">ไปต่อ</button>
+                <button id="quit-button" class="btn hidden">พอแค่นี้</button>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="end-screen" class="card bg-base-100 shadow-xl max-w-md mx-auto hidden">
+            <div class="card-body">
+                <h2 class="card-title" id="end-title">จบเกม!</h2>
+                <p id="end-text">คุณได้คะแนน <span id="final-score">0</span> จาก <span id="total-questions">0</span> คำถาม</p>
+                <div class="card-actions justify-center mt-4">
+                    <button class="btn btn-primary" id="play-again-button">เล่นอีกครั้ง</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer footer-center p-4 bg-base-300 text-base-content mt-auto">
+        <div>
+            <p id="footer-text">สร้างด้วย ❤️ สำหรับผู้ที่ต้องการพัฒนาไวยากรณ์ภาษาอังกฤษ</p>
+        </div>
+    </footer>
+
+    <script>
+        // Define game data
+        const grammarQuestions = [
+            {
+                question: "Which sentence is grammatically correct?",
+                options: [
+                    "She don't like ice cream.",
+                    "She doesn't likes ice cream.",
+                    "She doesn't like ice cream.",
+                    "She not like ice cream."
+                ],
+                correctAnswer: 2,
+                tip: "For third person singular (he/she/it) in present simple negative, use 'doesn't' + base form of the verb."
+            },
+            {
+                question: "Choose the correct sentence:",
+                options: [
+                    "I have been to Paris last year.",
+                    "I went to Paris last year.",
+                    "I have gone to Paris last year.",
+                    "I had been going to Paris last year."
+                ],
+                correctAnswer: 1,
+                tip: "For specific completed actions in the past with a specific time reference, use simple past tense."
+            },
+            {
+                question: "Which sentence uses the correct form of the comparative?",
+                options: [
+                    "This book is more better than the other one.",
+                    "This book is better than the other one.",
+                    "This book is gooder than the other one.",
+                    "This book is the better than the other one."
+                ],
+                correctAnswer: 1,
+                tip: "For one-syllable adjectives, add '-er' for the comparative form. Don't use 'more' with '-er' forms."
+            },
+            {
+                question: "Identify the sentence with correct subject-verb agreement:",
+                options: [
+                    "The team are playing well.",
+                    "The team is playing well.",
+                    "The team be playing well.",
+                    "The team were playing well."
+                ],
+                correctAnswer: 1,
+                tip: "In American English, collective nouns like 'team' are usually treated as singular and take singular verbs."
+            },
+            {
+                question: "Choose the grammatically correct sentence:",
+                options: [
+                    "If I would have known, I would have told you.",
+                    "If I would know, I would tell you.",
+                    "If I had known, I would have told you.",
+                    "If I have known, I would told you."
+                ],
+                correctAnswer: 2,
+                tip: "For third conditional (impossible past situations), use 'If + past perfect, would + have + past participle'."
+            },
+            {
+                question: "Which sentence uses the correct preposition?",
+                options: [
+                    "She's afraid from spiders.",
+                    "She's afraid at spiders.",
+                    "She's afraid of spiders.",
+                    "She's afraid on spiders."
+                ],
+                correctAnswer: 2,
+                tip: "The correct preposition to use with 'afraid' is 'of'."
+            },
+            {
+                question: "Which sentence has correct punctuation?",
+                options: [
+                    "John who is my brother lives in London.",
+                    "John, who is my brother lives in London.",
+                    "John who is my brother, lives in London.",
+                    "John, who is my brother, lives in London."
+                ],
+                correctAnswer: 3,
+                tip: "Non-restrictive relative clauses, which provide additional information, should be separated by commas on both sides."
+            },
+            {
+                question: "Select the sentence with the correct article usage:",
+                options: [
+                    "She is an university student.",
+                    "She is a university student.",
+                    "She is the university student.",
+                    "She is university student."
+                ],
+                correctAnswer: 1,
+                tip: "Use 'a' before words that begin with a consonant sound. 'University' begins with a consonant 'y' sound, not a vowel sound."
+            },
+            {
+                question: "Which sentence uses the correct verb tense?",
+                options: [
+                    "I am living in this city since 2010.",
+                    "I have been living in this city since 2010.",
+                    "I live in this city since 2010.",
+                    "I had lived in this city since 2010."
+                ],
+                correctAnswer: 1,
+                tip: "For actions that started in the past and continue to the present, use present perfect continuous with 'since' or 'for'."
+            },
+            {
+                question: "Choose the correct passive voice construction:",
+                options: [
+                    "The letter wrote by John.",
+                    "The letter was written by John.",
+                    "The letter was wrote by John.",
+                    "The letter is write by John."
+                ],
+                correctAnswer: 1,
+                tip: "In passive voice, use the appropriate form of 'be' + past participle. The past participle of 'write' is 'written'."
+            }
+        ];
+
+        // Translations
+        const translations = {
+            'th': {
+                'welcomeTitle': 'เกมทดสอบไวยากรณ์ภาษาอังกฤษ',
+                'welcomeText': 'ทดสอบความรู้ไวยากรณ์ภาษาอังกฤษของคุณด้วยคำถามสุ่มจากอินเทอร์เน็ต เลือกคำตอบที่ถูกต้องและดูผลลัพธ์ทันที!',
+                'startButton': 'เริ่มเกม',
+                'scoreTitle': 'คะแนน',
+                'questionsTitle': 'คำถาม',
+                'questionTitle': 'คำถาม',
+                'resultTitle': 'ผลลัพธ์',
+                'tipTitle': 'เคล็ดลับ',
+                'nextButton': 'ไปต่อ',
+                'quitButton': 'พอแค่นี้',
+                'endTitle': 'จบเกม!',
+                'endText': 'คุณได้คะแนน <span id="final-score">0</span> จาก <span id="total-questions">0</span> คำถาม',
+                'playAgainButton': 'เล่นอีกครั้ง',
+                'footerText': 'สร้างด้วย ❤️ สำหรับผู้ที่ต้องการพัฒนาไวยากรณ์ภาษาอังกฤษ',
+                'correct': 'ถูกต้อง! 🎉',
+                'incorrect': 'ไม่ถูกต้อง 😢 คำตอบที่ถูกต้องคือ: ',
+                'languageToggle': 'เปลี่ยนเป็นภาษาอังกฤษ'
+            },
+            'en': {
+                'welcomeTitle': 'English Grammar Check Game',
+                'welcomeText': 'Test your English grammar knowledge with random questions from the internet. Choose the correct answer and see the results immediately!',
+                'startButton': 'Start Game',
+                'scoreTitle': 'Score',
+                'questionsTitle': 'Questions',
+                'questionTitle': 'Question',
+                'resultTitle': 'Result',
+                'tipTitle': 'Tip',
+                'nextButton': 'Continue',
+                'quitButton': 'Quit',
+                'endTitle': 'Game Over!',
+                'endText': 'You scored <span id="final-score">0</span> out of <span id="total-questions">0</span> questions',
+                'playAgainButton': 'Play Again',
+                'footerText': 'Made with ❤️ for English grammar learners',
+                'correct': 'Correct! 🎉',
+                'incorrect': 'Incorrect 😢 The correct answer is: ',
+                'languageToggle': 'Switch to Thai'
+            }
+        };
+
+        // Game state
+        let currentQuestion = {};
+        let score = 0;
+        let questionCount = 0;
+        let usedQuestions = [];
+        let currentLanguage = 'th';
+
+        // DOM Elements
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const endScreen = document.getElementById('end-screen');
+        const startButton = document.getElementById('start-button');
+        const scoreElement = document.getElementById('score');
+        const questionCountElement = document.getElementById('question-count');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const resultCard = document.getElementById('result-card');
+        const resultText = document.getElementById('result-text');
+        const tipContainer = document.getElementById('tip-container');
+        const tipText = document.getElementById('tip-text');
+        const nextButton = document.getElementById('next-button');
+        const quitButton = document.getElementById('quit-button');
+        const finalScore = document.getElementById('final-score');
+        const totalQuestions = document.getElementById('total-questions');
+        const playAgainButton = document.getElementById('play-again-button');
+        const languageToggle = document.getElementById('language-toggle');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // Initialize the game
+        function initGame() {
+            updateLanguage();
+            startButton.addEventListener('click', startGame);
+            nextButton.addEventListener('click', nextQuestion);
+            quitButton.addEventListener('click', endGame);
+            playAgainButton.addEventListener('click', restartGame);
+            languageToggle.addEventListener('click', toggleLanguage);
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Start the game
+        function startGame() {
+            welcomeScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            score = 0;
+            questionCount = 0;
+            usedQuestions = [];
+            updateScoreDisplay();
+            nextQuestion();
+        }
+
+        // Load the next question
+        function nextQuestion() {
+            // Hide the result and buttons
+            resultCard.classList.add('hidden');
+            nextButton.classList.add('hidden');
+            quitButton.classList.add('hidden');
+            tipContainer.classList.add('hidden');
+            
+            // Check if we've used all questions
+            if (usedQuestions.length >= grammarQuestions.length) {
+                endGame();
+                return;
+            }
+
+            // Get a random unused question
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * grammarQuestions.length);
+            } while (usedQuestions.includes(randomIndex));
+            
+            usedQuestions.push(randomIndex);
+            currentQuestion = grammarQuestions[randomIndex];
+            questionCount++;
+            
+            // Update the UI
+            questionText.textContent = currentQuestion.question;
+            updateScoreDisplay();
+            
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            
+            // Add new options
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.classList.add('btn', 'btn-outline', 'w-full', 'text-left', 'justify-start');
+                button.textContent = option;
+                button.addEventListener('click', () => checkAnswer(index));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Check the selected answer
+        function checkAnswer(selectedIndex) {
+            // Disable all buttons
+            const optionButtons = optionsContainer.querySelectorAll('button');
+            optionButtons.forEach(button => {
+                button.disabled = true;
+                if (optionButtons[currentQuestion.correctAnswer] === button) {
+                    button.classList.add('btn-success');
+                }
+            });
+            
+            // Highlight selected button
+            const selectedButton = optionButtons[selectedIndex];
+            if (selectedIndex !== currentQuestion.correctAnswer) {
+                selectedButton.classList.add('btn-error');
+            }
+            
+            // Update score if correct
+            if (selectedIndex === currentQuestion.correctAnswer) {
+                score++;
+                resultCard.classList.add('bg-success', 'text-success-content');
+                resultText.textContent = translations[currentLanguage].correct;
+            } else {
+                resultCard.classList.add('bg-error', 'text-error-content');
+                resultText.textContent = translations[currentLanguage].incorrect + currentQuestion.options[currentQuestion.correctAnswer];
+                
+                // Show tip
+                tipContainer.classList.remove('hidden');
+                tipText.textContent = currentQuestion.tip;
+            }
+            
+            // Show result and buttons
+            resultCard.classList.remove('hidden');
+            nextButton.classList.remove('hidden');
+            quitButton.classList.remove('hidden');
+            updateScoreDisplay();
+        }
+
+        // End the game
+        function endGame() {
+            gameScreen.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            finalScore.textContent = score;
+            totalQuestions.textContent = questionCount;
+        }
+
+        // Restart the game
+        function restartGame() {
+            endScreen.classList.add('hidden');
+            startGame();
+        }
+
+        // Update score display
+        function updateScoreDisplay() {
+            scoreElement.textContent = score;
+            questionCountElement.textContent = questionCount;
+        }
+
+        // Toggle language
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'th' ? 'en' : 'th';
+            updateLanguage();
+        }
+
+        // Update language throughout the UI
+        function updateLanguage() {
+            document.getElementById('welcome-title').textContent = translations[currentLanguage].welcomeTitle;
+            document.getElementById('welcome-text').textContent = translations[currentLanguage].welcomeText;
+            document.getElementById('start-button').textContent = translations[currentLanguage].startButton;
+            document.getElementById('score-title').textContent = translations[currentLanguage].scoreTitle;
+            document.getElementById('questions-title').textContent = translations[currentLanguage].questionsTitle;
+            document.getElementById('question-title').textContent = translations[currentLanguage].questionTitle;
+            document.getElementById('result-title').textContent = translations[currentLanguage].resultTitle;
+            document.getElementById('tip-title').textContent = translations[currentLanguage].tipTitle;
+            document.getElementById('next-button').textContent = translations[currentLanguage].nextButton;
+            document.getElementById('quit-button').textContent = translations[currentLanguage].quitButton;
+            document.getElementById('end-title').textContent = translations[currentLanguage].endTitle;
+            document.getElementById('end-text').innerHTML = translations[currentLanguage].endText;
+            document.getElementById('play-again-button').textContent = translations[currentLanguage].playAgainButton;
+            document.getElementById('footer-text').textContent = translations[currentLanguage].footerText;
+            document.getElementById('language-toggle').textContent = translations[currentLanguage].languageToggle;
+            
+            // Update dynamic elements if they exist
+            if (resultCard.classList.contains('bg-success')) {
+                resultText.textContent = translations[currentLanguage].correct;
+            } else if (resultCard.classList.contains('bg-error')) {
+                resultText.textContent = translations[currentLanguage].incorrect + (currentQuestion.options ? currentQuestion.options[currentQuestion.correctAnswer] : '');
+            }
+            
+            // Update final score text
+            if (!endScreen.classList.contains('hidden')) {
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('total-questions').textContent = questionCount;
+            }
+        }
+
+        // Toggle theme
+        function toggleTheme() {
+            const html = document.querySelector('html');
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+        }
+
+        // Initialize the game when the page loads
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
