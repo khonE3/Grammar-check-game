@@ -14,6 +14,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            font-family: 'Nunito', 'Prompt', sans-serif;
         }
         .container {
             flex: 1;
@@ -25,104 +26,280 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        /* Duolingo-like styling */
+        .duolingo-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .duolingo-header {
+            background-color: #58cc02;
+            color: white;
+            border-bottom: 4px solid #46a302;
+        }
+        .duolingo-btn {
+            background-color: #58cc02;
+            color: white;
+            border-bottom: 4px solid #46a302;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: all 0.1s ease;
+        }
+        .duolingo-btn:hover {
+            background-color: #61dd00;
+            transform: translateY(-2px);
+        }
+        .duolingo-btn:active {
+            border-bottom-width: 2px;
+            transform: translateY(2px);
+        }
+        .duolingo-btn-disabled {
+            background-color: #e5e5e5;
+            border-bottom-color: #cccccc;
+            color: #afafaf;
+        }
+        .option-btn {
+            background-color: white;
+            border: 2px solid #e5e5e5;
+            color: #4b4b4b;
+            font-weight: bold;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .option-btn:hover {
+            background-color: #f7f7f7;
+            border-color: #d9d9d9;
+        }
+        .option-btn-correct {
+            background-color: #d7ffb8;
+            border-color: #58cc02;
+            color: #58cc02;
+        }
+        .option-btn-wrong {
+            background-color: #ffdfe0;
+            border-color: #ea2b2b;
+            color: #ea2b2b;
+        }
+        .progress-container {
+            height: 16px;
+            background-color: #e5e5e5;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #58cc02;
+            transition: width 0.3s ease;
+        }
+        .heart-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .heart {
+            color: #ff4b4b;
+            font-size: 1.5rem;
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            10% { transform: translateX(-5px); }
+            20% { transform: translateX(5px); }
+            30% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            50% { transform: translateX(-5px); }
+            60% { transform: translateX(5px); }
+            70% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+            90% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        .error-notification {
+            background-color: #ffdfe0;
+            border: 2px solid #ea2b2b;
+            color: #ea2b2b;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            font-weight: bold;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .success-notification {
+            background-color: #d7ffb8;
+            border: 2px solid #58cc02;
+            color: #58cc02;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            font-weight: bold;
+            animation: slideIn 0.3s ease;
+        }
+        .character {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+        }
+        /* Owl character (Duolingo mascot approximation) */
+        .owl {
+            background-color: #7ac70c;
+            border-radius: 50%;
+            position: relative;
+            margin: 20px auto;
+        }
+        .owl::before {
+            content: "";
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            background-color: white;
+            border-radius: 50%;
+            top: 5%;
+            left: 5%;
+        }
+        .owl-eyes {
+            position: absolute;
+            width: 100%;
+            top: 35%;
+            display: flex;
+            justify-content: space-evenly;
+            z-index: 1;
+        }
+        .owl-eye {
+            width: 28px;
+            height: 28px;
+            background-color: #4b4b4b;
+            border-radius: 50%;
+            position: relative;
+        }
+        .owl-eye::before {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            top: 5px;
+            left: 5px;
+        }
+        .owl-beak {
+            position: absolute;
+            width: 24px;
+            height: 16px;
+            background-color: #ffb100;
+            border-radius: 0 0 12px 12px;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
     </style>
 </head>
-<body class="bg-base-200">
-    <div class="navbar bg-primary text-primary-content shadow-lg">
-        <div class="flex-1">
-            <a class="btn btn-ghost normal-case text-xl">Grammar Check Game</a>
-        </div>
-        <div class="flex-none">
-            <div class="dropdown dropdown-end">
-                <label tabindex="0" class="btn btn-ghost rounded-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.27-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+<body class="bg-gray-100">
+    <div class="duolingo-header w-full shadow-lg py-4">
+        <div class="duolingo-container px-4 flex justify-between items-center">
+            <div class="text-2xl font-bold">GrammarCheck</div>
+            <div class="flex gap-4 items-center">
+                <div class="heart-container">
+                    <span class="heart">❤️</span>
+                    <span id="hearts-count">5</span>
+                </div>
+                <button id="language-toggle" class="px-3 py-1 bg-white text-green-600 rounded-full text-sm font-bold">ไทย</button>
+                <button id="theme-toggle" class="px-3 py-1 bg-white text-green-600 rounded-full text-sm font-bold">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                     </svg>
-                </label>
-                <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4 text-base-content">
-                    <li>
-                        <button id="theme-toggle">
-                            Toggle Theme
-                        </button>
-                    </li>
-                    <li>
-                        <button id="language-toggle">
-                            Switch to English
-                        </button>
-                    </li>
-                </ul>
+                </button>
             </div>
         </div>
     </div>
 
     <div class="container mx-auto px-4 py-8">
         <!-- Welcome Screen -->
-        <div id="welcome-screen" class="card bg-base-100 shadow-xl max-w-md mx-auto fade-in">
-            <div class="card-body">
-                <h2 class="card-title text-center" id="welcome-title">เกมทดสอบไวยากรณ์ภาษาอังกฤษ</h2>
-                <p id="welcome-text">ทดสอบความรู้ไวยากรณ์ภาษาอังกฤษของคุณด้วยคำถามสุ่มจากอินเทอร์เน็ต เลือกคำตอบที่ถูกต้องและดูผลลัพธ์ทันที!</p>
-                <div class="card-actions justify-center mt-4">
-                    <button class="btn btn-primary" id="start-button">เริ่มเกม</button>
+        <div id="welcome-screen" class="duolingo-container bg-white rounded-3xl shadow-md p-6 fade-in">
+            <div class="character owl">
+                <div class="owl-eyes">
+                    <div class="owl-eye"></div>
+                    <div class="owl-eye"></div>
                 </div>
+                <div class="owl-beak"></div>
+            </div>
+            <h2 class="text-3xl font-bold text-center mb-4" id="welcome-title">เกมทดสอบไวยากรณ์ภาษาอังกฤษ</h2>
+            <p id="welcome-text" class="text-center text-gray-600 mb-8">ทดสอบความรู้ไวยากรณ์ภาษาอังกฤษของคุณด้วยคำถามสุ่มจากอินเทอร์เน็ต เลือกคำตอบที่ถูกต้องและดูผลลัพธ์ทันที!</p>
+            <div class="flex justify-center">
+                <button class="duolingo-btn py-3 px-10 text-xl" id="start-button">เริ่มเกม</button>
             </div>
         </div>
 
         <!-- Game Screen -->
-        <div id="game-screen" class="hidden">
-            <div class="stats shadow bg-base-100 w-full mb-6">
-                <div class="stat">
-                    <div class="stat-title" id="score-title">คะแนน</div>
-                    <div class="stat-value text-primary" id="score">0</div>
+        <div id="game-screen" class="duolingo-container hidden">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+            
+            <div class="bg-white rounded-3xl shadow-md p-6 mb-6 fade-in">
+                <h2 class="text-xl font-bold mb-4" id="question-title">คำถาม</h2>
+                <p id="question-text" class="text-lg mb-6"></p>
+                <div id="options" class="flex flex-col gap-2">
+                    <!-- Options will be inserted here -->
                 </div>
-                <div class="stat">
-                    <div class="stat-title" id="questions-title">คำถาม</div>
-                    <div class="stat-value" id="question-count">0</div>
+                
+                <div id="error-notification" class="error-notification hidden">
+                    <p id="error-text">คำตอบไม่ถูกต้อง</p>
+                </div>
+                
+                <div id="success-notification" class="success-notification hidden">
+                    <p id="success-text">ถูกต้อง!</p>
+                </div>
+                
+                <div id="tip-container" class="bg-blue-50 border-2 border-blue-300 text-blue-800 rounded-xl p-4 mt-4 hidden">
+                    <h3 class="font-bold mb-1" id="tip-title">เคล็ดลับ</h3>
+                    <p id="tip-text" class="text-sm"></p>
                 </div>
             </div>
 
-            <div class="card bg-base-100 shadow-xl mb-6 fade-in">
-                <div class="card-body">
-                    <h2 class="card-title" id="question-title">คำถาม</h2>
-                    <p id="question-text" class="text-lg my-4"></p>
-                    <div id="options" class="grid grid-cols-1 gap-2 mt-2">
-                        <!-- Options will be inserted here -->
-                    </div>
-                </div>
+            <div class="flex justify-center gap-4">
+                <button id="next-button" class="duolingo-btn py-3 px-10 text-xl hidden">ไปต่อ</button>
+                <button id="quit-button" class="py-3 px-10 text-xl bg-gray-200 text-gray-600 font-bold rounded-xl border-b-4 border-gray-300 hidden">พอแค่นี้</button>
             </div>
-
-            <!-- Result Card -->
-            <div id="result-card" class="card hidden mb-6">
-                <div class="card-body">
-                    <h2 class="card-title" id="result-title">ผลลัพธ์</h2>
-                    <p id="result-text" class="text-lg"></p>
-                    <div id="tip-container" class="bg-base-200 p-4 rounded-lg mt-2 hidden">
-                        <h3 class="font-bold" id="tip-title">เคล็ดลับ</h3>
-                        <p id="tip-text"></p>
-                    </div>
+            
+            <div class="flex justify-between items-center mt-6">
+                <div class="text-lg font-bold">
+                    <span id="score-title">คะแนน</span>: <span id="score" class="text-green-600">0</span>
                 </div>
-            </div>
-
-            <div class="flex justify-center space-x-4 mt-4">
-                <button id="next-button" class="btn btn-primary hidden">ไปต่อ</button>
-                <button id="quit-button" class="btn hidden">พอแค่นี้</button>
+                <div class="text-lg">
+                    <span id="questions-title">คำถาม</span>: <span id="question-count">0</span>/<span id="total-available">10</span>
+                </div>
             </div>
         </div>
 
         <!-- End Screen -->
-        <div id="end-screen" class="card bg-base-100 shadow-xl max-w-md mx-auto hidden">
-            <div class="card-body">
-                <h2 class="card-title" id="end-title">จบเกม!</h2>
-                <p id="end-text">คุณได้คะแนน <span id="final-score">0</span> จาก <span id="total-questions">0</span> คำถาม</p>
-                <div class="card-actions justify-center mt-4">
-                    <button class="btn btn-primary" id="play-again-button">เล่นอีกครั้ง</button>
+        <div id="end-screen" class="duolingo-container bg-white rounded-3xl shadow-md p-6 hidden">
+            <div class="character owl">
+                <div class="owl-eyes">
+                    <div class="owl-eye"></div>
+                    <div class="owl-eye"></div>
                 </div>
+                <div class="owl-beak"></div>
+            </div>
+            <h2 class="text-3xl font-bold text-center mb-4" id="end-title">เยี่ยมมาก!</h2>
+            <p id="end-text" class="text-center text-gray-600 mb-8">คุณได้คะแนน <span id="final-score" class="text-green-600 font-bold">0</span> จาก <span id="total-questions" class="font-bold">0</span> คำถาม</p>
+            <div class="flex justify-center">
+                <button class="duolingo-btn py-3 px-10 text-xl" id="play-again-button">เล่นอีกครั้ง</button>
             </div>
         </div>
     </div>
 
-    <footer class="footer footer-center p-4 bg-base-300 text-base-content mt-auto">
-        <div>
+    <footer class="bg-gray-200 py-4 mt-auto">
+        <div class="duolingo-container px-4 text-center text-gray-600">
             <p id="footer-text">สร้างด้วย ❤️ สำหรับผู้ที่ต้องการพัฒนาไวยากรณ์ภาษาอังกฤษ</p>
         </div>
     </footer>
@@ -251,17 +428,19 @@
                 'scoreTitle': 'คะแนน',
                 'questionsTitle': 'คำถาม',
                 'questionTitle': 'คำถาม',
-                'resultTitle': 'ผลลัพธ์',
                 'tipTitle': 'เคล็ดลับ',
                 'nextButton': 'ไปต่อ',
                 'quitButton': 'พอแค่นี้',
-                'endTitle': 'จบเกม!',
-                'endText': 'คุณได้คะแนน <span id="final-score">0</span> จาก <span id="total-questions">0</span> คำถาม',
+                'endTitle': 'เยี่ยมมาก!',
+                'endText': 'คุณได้คะแนน <span id="final-score" class="text-green-600 font-bold">0</span> จาก <span id="total-questions" class="font-bold">0</span> คำถาม',
                 'playAgainButton': 'เล่นอีกครั้ง',
                 'footerText': 'สร้างด้วย ❤️ สำหรับผู้ที่ต้องการพัฒนาไวยากรณ์ภาษาอังกฤษ',
                 'correct': 'ถูกต้อง! 🎉',
-                'incorrect': 'ไม่ถูกต้อง 😢 คำตอบที่ถูกต้องคือ: ',
-                'languageToggle': 'เปลี่ยนเป็นภาษาอังกฤษ'
+                'incorrect': 'ไม่ถูกต้อง 😢',
+                'incorrectAnswer': 'คำตอบที่ถูกต้องคือ: ',
+                'languageToggle': 'EN',
+                'errorText': 'คำตอบไม่ถูกต้อง! ลองอีกครั้ง',
+                'successText': 'ยอดเยี่ยม! คำตอบถูกต้อง'
             },
             'en': {
                 'welcomeTitle': 'English Grammar Check Game',
@@ -270,17 +449,19 @@
                 'scoreTitle': 'Score',
                 'questionsTitle': 'Questions',
                 'questionTitle': 'Question',
-                'resultTitle': 'Result',
                 'tipTitle': 'Tip',
                 'nextButton': 'Continue',
                 'quitButton': 'Quit',
-                'endTitle': 'Game Over!',
-                'endText': 'You scored <span id="final-score">0</span> out of <span id="total-questions">0</span> questions',
+                'endTitle': 'Great job!',
+                'endText': 'You scored <span id="final-score" class="text-green-600 font-bold">0</span> out of <span id="total-questions" class="font-bold">0</span> questions',
                 'playAgainButton': 'Play Again',
                 'footerText': 'Made with ❤️ for English grammar learners',
                 'correct': 'Correct! 🎉',
-                'incorrect': 'Incorrect 😢 The correct answer is: ',
-                'languageToggle': 'Switch to Thai'
+                'incorrect': 'Incorrect 😢',
+                'incorrectAnswer': 'The correct answer is: ',
+                'languageToggle': 'ไทย',
+                'errorText': 'Incorrect answer! Try again',
+                'successText': 'Great! Correct answer'
             }
         };
 
@@ -288,6 +469,7 @@
         let currentQuestion = {};
         let score = 0;
         let questionCount = 0;
+        let hearts = 5;
         let usedQuestions = [];
         let currentLanguage = 'th';
 
@@ -298,10 +480,13 @@
         const startButton = document.getElementById('start-button');
         const scoreElement = document.getElementById('score');
         const questionCountElement = document.getElementById('question-count');
+        const totalAvailableElement = document.getElementById('total-available');
         const questionText = document.getElementById('question-text');
         const optionsContainer = document.getElementById('options');
-        const resultCard = document.getElementById('result-card');
-        const resultText = document.getElementById('result-text');
+        const errorNotification = document.getElementById('error-notification');
+        const errorText = document.getElementById('error-text');
+        const successNotification = document.getElementById('success-notification');
+        const successText = document.getElementById('success-text');
         const tipContainer = document.getElementById('tip-container');
         const tipText = document.getElementById('tip-text');
         const nextButton = document.getElementById('next-button');
@@ -311,10 +496,13 @@
         const playAgainButton = document.getElementById('play-again-button');
         const languageToggle = document.getElementById('language-toggle');
         const themeToggle = document.getElementById('theme-toggle');
+        const progressBar = document.getElementById('progress-bar');
+        const heartsCount = document.getElementById('hearts-count');
 
         // Initialize the game
         function initGame() {
             updateLanguage();
+            totalAvailableElement.textContent = grammarQuestions.length;
             startButton.addEventListener('click', startGame);
             nextButton.addEventListener('click', nextQuestion);
             quitButton.addEventListener('click', endGame);
@@ -329,21 +517,31 @@
             gameScreen.classList.remove('hidden');
             score = 0;
             questionCount = 0;
+            hearts = 5;
             usedQuestions = [];
+            heartsCount.textContent = hearts;
             updateScoreDisplay();
+            updateProgressBar();
             nextQuestion();
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = (questionCount / grammarQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
         }
 
         // Load the next question
         function nextQuestion() {
-            // Hide the result and buttons
-            resultCard.classList.add('hidden');
+            // Hide notifications and buttons
+            errorNotification.classList.add('hidden');
+            successNotification.classList.add('hidden');
+            tipContainer.classList.add('hidden');
             nextButton.classList.add('hidden');
             quitButton.classList.add('hidden');
-            tipContainer.classList.add('hidden');
-            
-            // Check if we've used all questions
-            if (usedQuestions.length >= grammarQuestions.length) {
+
+            // Check if game should end
+            if (usedQuestions.length >= grammarQuestions.length || hearts <= 0) {
                 endGame();
                 return;
             }
@@ -358,17 +556,16 @@
             currentQuestion = grammarQuestions[randomIndex];
             questionCount++;
             
-            // Update the UI
+            // Update UI
             questionText.textContent = currentQuestion.question;
             updateScoreDisplay();
+            updateProgressBar();
             
-            // Clear previous options
+            // Clear and populate options
             optionsContainer.innerHTML = '';
-            
-            // Add new options
             currentQuestion.options.forEach((option, index) => {
                 const button = document.createElement('button');
-                button.classList.add('btn', 'btn-outline', 'w-full', 'text-left', 'justify-start');
+                button.classList.add('option-btn', 'py-3', 'px-4', 'w-full', 'text-left');
                 button.textContent = option;
                 button.addEventListener('click', () => checkAnswer(index));
                 optionsContainer.appendChild(button);
@@ -377,37 +574,30 @@
 
         // Check the selected answer
         function checkAnswer(selectedIndex) {
-            // Disable all buttons
             const optionButtons = optionsContainer.querySelectorAll('button');
-            optionButtons.forEach(button => {
-                button.disabled = true;
-                if (optionButtons[currentQuestion.correctAnswer] === button) {
-                    button.classList.add('btn-success');
-                }
-            });
-            
-            // Highlight selected button
+            optionButtons.forEach(button => button.disabled = true);
             const selectedButton = optionButtons[selectedIndex];
-            if (selectedIndex !== currentQuestion.correctAnswer) {
-                selectedButton.classList.add('btn-error');
-            }
-            
-            // Update score if correct
+
             if (selectedIndex === currentQuestion.correctAnswer) {
                 score++;
-                resultCard.classList.add('bg-success', 'text-success-content');
-                resultText.textContent = translations[currentLanguage].correct;
+                selectedButton.classList.add('option-btn-correct');
+                successNotification.classList.remove('hidden');
+                successText.textContent = translations[currentLanguage].successText;
+                tipContainer.classList.remove('hidden');
+                tipText.textContent = currentQuestion.tip;
             } else {
-                resultCard.classList.add('bg-error', 'text-error-content');
-                resultText.textContent = translations[currentLanguage].incorrect + currentQuestion.options[currentQuestion.correctAnswer];
-                
-                // Show tip
+                hearts--;
+                heartsCount.textContent = hearts;
+                gameScreen.classList.add('shake');
+                setTimeout(() => gameScreen.classList.remove('shake'), 500);
+                selectedButton.classList.add('option-btn-wrong');
+                optionButtons[currentQuestion.correctAnswer].classList.add('option-btn-correct');
+                errorNotification.classList.remove('hidden');
+                errorText.textContent = `${translations[currentLanguage].errorText} (${translations[currentLanguage].incorrectAnswer} "${currentQuestion.options[currentQuestion.correctAnswer]}")`;
                 tipContainer.classList.remove('hidden');
                 tipText.textContent = currentQuestion.tip;
             }
-            
-            // Show result and buttons
-            resultCard.classList.remove('hidden');
+
             nextButton.classList.remove('hidden');
             quitButton.classList.remove('hidden');
             updateScoreDisplay();
@@ -431,6 +621,7 @@
         function updateScoreDisplay() {
             scoreElement.textContent = score;
             questionCountElement.textContent = questionCount;
+            totalAvailableElement.textContent = grammarQuestions.length;
         }
 
         // Toggle language
@@ -439,7 +630,7 @@
             updateLanguage();
         }
 
-        // Update language throughout the UI
+        // Update UI with selected language
         function updateLanguage() {
             document.getElementById('welcome-title').textContent = translations[currentLanguage].welcomeTitle;
             document.getElementById('welcome-text').textContent = translations[currentLanguage].welcomeText;
@@ -447,7 +638,6 @@
             document.getElementById('score-title').textContent = translations[currentLanguage].scoreTitle;
             document.getElementById('questions-title').textContent = translations[currentLanguage].questionsTitle;
             document.getElementById('question-title').textContent = translations[currentLanguage].questionTitle;
-            document.getElementById('result-title').textContent = translations[currentLanguage].resultTitle;
             document.getElementById('tip-title').textContent = translations[currentLanguage].tipTitle;
             document.getElementById('next-button').textContent = translations[currentLanguage].nextButton;
             document.getElementById('quit-button').textContent = translations[currentLanguage].quitButton;
@@ -457,30 +647,30 @@
             document.getElementById('footer-text').textContent = translations[currentLanguage].footerText;
             document.getElementById('language-toggle').textContent = translations[currentLanguage].languageToggle;
             
-            // Update dynamic elements if they exist
-            if (resultCard.classList.contains('bg-success')) {
-                resultText.textContent = translations[currentLanguage].correct;
-            } else if (resultCard.classList.contains('bg-error')) {
-                resultText.textContent = translations[currentLanguage].incorrect + (currentQuestion.options ? currentQuestion.options[currentQuestion.correctAnswer] : '');
-            }
-            
-            // Update final score text
+            errorText.textContent = translations[currentLanguage].errorText;
+            successText.textContent = translations[currentLanguage].successText;
+
             if (!endScreen.classList.contains('hidden')) {
-                document.getElementById('final-score').textContent = score;
-                document.getElementById('total-questions').textContent = questionCount;
+                finalScore.textContent = score;
+                totalQuestions.textContent = questionCount;
             }
         }
 
-        // Toggle theme
+        // Toggle theme (light/dark)
         function toggleTheme() {
             const html = document.querySelector('html');
             const currentTheme = html.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
             html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme); // Persist theme choice
         }
 
-        // Initialize the game when the page loads
-        window.addEventListener('DOMContentLoaded', initGame);
+        // Load saved theme on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.querySelector('html').setAttribute('data-theme', savedTheme);
+            initGame();
+        });
     </script>
 </body>
 </html>
