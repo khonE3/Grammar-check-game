@@ -1,2 +1,2 @@
-# Grammar-check
-Grammar check Website
+# Grammar checker game
+Grammar check game Website
