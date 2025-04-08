@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<title>Grammar Galaxy</title>
 		<link
 			href="https://cdn.jsdelivr.net/npm/daisyui@4.4.12/dist/full.css"
@@ -387,6 +387,67 @@
 				content: "> ";
 				color: #00d4ff;
 			}
+
+            /* ---- Responsive Adjustments ---- */
+        @media (max-width: 640px) {
+            body {
+                align-items: flex-start;
+                padding-top: 1rem;
+            }
+            
+            .card {
+                margin: 0.5rem;
+                width: 95%;
+                max-width: 95%;
+                padding: 1rem;
+            }
+            
+            #questionBox {
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .option-btn {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.95rem;
+                margin: 0.25rem 0;
+            }
+            
+            footer {
+                margin-top: 1rem;
+                padding: 0.5rem;
+            }
+            
+            .progress-container {
+                margin: 0.5rem 0;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            /* iPad and tablet styles */
+            .card {
+                width: 80%;
+                max-width: 600px;
+                padding: 1.5rem;
+            }
+            
+            #questionBox {
+                font-size: 1.25rem;
+            }
+            
+            .option-btn {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            /* Desktop styles */
+            .card {
+                width: 100%;
+                max-width: 500px;
+            }
+        }
 		</style>
 	</head>
 	<body>
@@ -399,8 +460,8 @@
 
 		<!-- Content -->
 		<div
-			class="w-full max-w-md card rounded-2xl shadow-xl p-6 space-y-6 text-white"
-		>
+  class="w-[90%] max-w-md card rounded-2xl shadow-xl p-4 sm:p-6 space-y-4 sm:space-y-6 text-white mx-auto"
+>
 			<div class="text-center space-y-2">
 				<h1
 					class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 text-transparent bg-clip-text glow"
