@@ -14,102 +14,44 @@
 			href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&display=swap"
 			rel="stylesheet"
 		/>
-		<script>
-			tailwind.config = {
-				theme: {
-					extend: {
-						fontFamily: {
-							exo: ["Exo 2", "sans-serif"],
-						},
-						colors: {
-							primary: "#4d83ff",
-							secondary: "#00d4ff",
-							space: "#0c1445",
-							neon: "#00f7ff",
-						},
-					},
-				},
-			};
-		</script>
 		<style>
+			/* ---- Base styles ---- */
 			body {
 				font-family: "Exo 2", sans-serif;
 				background-color: #0c1445;
-				overflow: hidden;
+				margin: 0;
+				padding: 0;
 				min-height: 100vh;
-				display: flex;
-				flex-direction: column;
+				overflow-x: hidden;
 				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
 			}
 			
-			/* Space background */
-			.space-background {
+			/* ---- Space Background with Stars (Fixed) ---- */
+			body::before {
+				content: "";
 				position: fixed;
 				top: 0;
 				left: 0;
 				width: 100%;
 				height: 100%;
+				background-color: #0c1445;
+				background-image: 
+					radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 40px),
+					radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 30px),
+					radial-gradient(white, rgba(255, 255, 255, 0.1) 2px, transparent 40px),
+					linear-gradient(45deg, #090d2a 0%, #170b47 50%, #0f0933 100%);
+				background-size: 550px 550px, 350px 350px, 250px 250px, 100% 100%;
+				background-position: 0 0, 40px 60px, 130px 270px, 0 0;
 				z-index: -2;
-				background: linear-gradient(125deg, #090d2a, #170b47, #0f0933);
-				animation: space-shift 30s ease infinite alternate;
+				animation: space-shift 20s ease infinite alternate;
 			}
 			
-			@keyframes space-shift {
-				0% { background-position: 0% 50%; }
-				50% { background-position: 100% 50%; }
-				100% { background-position: 0% 50%; }
-			}
-			
-			/* Stars */
-			.stars {
-				position: fixed;
-				width: 100%;
-				height: 100%;
-				z-index: -1;
-				overflow: hidden;
-			}
-			
-			.star {
-				position: absolute;
-				background-color: white;
-				border-radius: 50%;
-				animation: twinkle var(--twinkle-duration) ease-in-out infinite;
-				opacity: var(--twinkle-opacity);
-			}
-			
-			@keyframes twinkle {
-				0%, 100% { opacity: var(--twinkle-opacity); transform: scale(1); }
-				50% { opacity: 1; transform: scale(1.2); }
-			}
-			
-			/* Shooting stars */
-			.shooting-star {
-				position: absolute;
-				width: 100px;
-				height: 2px;
-				background: linear-gradient(to right, transparent, #ffffff, #4d83ff, transparent);
-				animation: shooting var(--shooting-duration) linear infinite;
-				animation-delay: var(--shooting-delay);
-				transform: rotate(var(--shooting-angle));
-				opacity: 0;
-				z-index: -1;
-			}
-			
-			@keyframes shooting {
-				0% {
-					opacity: 0;
-					transform: translateX(-100px) rotate(var(--shooting-angle));
-				}
-				10%, 40% {
-					opacity: 1;
-				}
-				100% {
-					opacity: 0;
-					transform: translateX(calc(100vw + 100px)) rotate(var(--shooting-angle));
-				}
-			}
-			
-			.grid-effect {
+			/* ---- Grid Effect ---- */
+			body::after {
+				content: "";
 				position: fixed;
 				top: 0;
 				left: 0;
@@ -120,19 +62,80 @@
 					linear-gradient(90deg, rgba(77, 131, 255, 0.05) 1px, transparent 1px);
 				background-size: 30px 30px;
 				z-index: -1;
-				perspective: 500px;
 				animation: grid-move 20s linear infinite;
 			}
 			
+			@keyframes space-shift {
+				0% { background-position: 0 0, 40px 60px, 130px 270px, 0% 0%; }
+				50% { background-position: 10px 30px, 50px 70px, 120px 260px, 100% 100%; }
+				100% { background-position: 0 0, 40px 60px, 130px 270px, 0% 0%; }
+			}
+			
 			@keyframes grid-move {
+				0% { background-position: 0 0; }
+				100% { background-position: 30px 30px; }
+			}
+			
+			/* ---- Shooting stars ---- */
+			.shooting-star {
+				position: absolute;
+				width: 150px;
+				height: 2px;
+				background: linear-gradient(to right, transparent, #ffffff, #4d83ff, transparent);
+				animation: shooting 3s linear infinite;
+				opacity: 0;
+			}
+			
+			.shooting-star:nth-child(1) {
+				top: 15%;
+				left: 10%;
+				animation-delay: 0s;
+                transform: rotate(15deg);
+			}
+			
+			.shooting-star:nth-child(2) {
+				top: 35%;
+				left: 5%;
+				animation-delay: 4s;
+                transform: rotate(25deg);
+			}
+			
+			.shooting-star:nth-child(3) {
+				top: 60%;
+				left: 15%;
+				animation-delay: 7s;
+                transform: rotate(5deg);
+			}
+			
+			.shooting-star:nth-child(4) {
+				top: 20%;
+				left: 75%;
+				animation-delay: 2s;
+                transform: rotate(-15deg);
+			}
+			
+			.shooting-star:nth-child(5) {
+				top: 70%;
+				left: 65%;
+				animation-delay: 9s;
+                transform: rotate(-25deg);
+			}
+			
+			@keyframes shooting {
 				0% {
-					background-position: 0 0;
+					opacity: 0;
+					transform: translateX(-50px) rotate(var(--angle, 15deg));
+				}
+				10%, 40% {
+					opacity: 1;
 				}
 				100% {
-					background-position: 30px 30px;
+					opacity: 0;
+					transform: translateX(calc(100vw + 50px)) rotate(var(--angle, 15deg));
 				}
 			}
 
+			/* ---- Card and Button Styles ---- */
 			.option-btn {
 				transition: all 0.3s ease;
 				position: relative;
@@ -212,6 +215,7 @@
 				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(77, 131, 255, 0.3);
 				animation: float 6s ease-in-out infinite;
 				transform-style: preserve-3d;
+				z-index: 10;
 			}
 			
 			@keyframes float {
@@ -262,23 +266,6 @@
 				box-shadow: 0 0 20px rgba(77, 131, 255, 0.7);
 			}
 			
-			.btn-primary::after {
-				content: '';
-				position: absolute;
-				top: -50%;
-				left: -50%;
-				width: 200%;
-				height: 200%;
-				background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
-				transform: rotate(45deg);
-				transition: all 0.3s ease;
-				opacity: 0;
-			}
-			
-			.btn-primary:hover::after {
-				opacity: 1;
-			}
-			
 			#questionBox {
 				text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 				animation: question-appear 0.5s ease;
@@ -324,17 +311,17 @@
 			}
 		</style>
 	</head>
-	<body class="flex items-center justify-center p-4">
-		<div class="space-background"></div>
-		<div class="stars" id="stars"></div>
-		<div class="grid-effect"></div>
+	<body>
+		<!-- Fixed shooting stars - no JavaScript needed -->
+		<div class="shooting-star"></div>
+		<div class="shooting-star"></div>
+		<div class="shooting-star"></div>
+		<div class="shooting-star"></div>
+		<div class="shooting-star"></div>
 		
-		<!-- Shooting stars container -->
-		<div id="shootingStars"></div>
-		
-		<div class="w-full max-w-md card rounded-2xl shadow-xl p-6 space-y-6 text-white" style="z-index: 10;">
+		<div class="w-full max-w-md card rounded-2xl shadow-xl p-6 space-y-6 text-white">
 			<div class="text-center space-y-2">
-				<h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary glow">Grammar Galaxy 🚀</h1>
+				<h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 text-transparent bg-clip-text glow">Grammar Galaxy 🚀</h1>
 				<p class="text-sm text-blue-200 console-effect">Choose the correct sentence</p>
 			</div>
 
@@ -356,7 +343,7 @@
 			<div class="text-center mt-4 hidden" id="restartBox">
 				<button
 					onclick="restartGame()"
-					class="btn btn-outline border-neon text-neon hover:bg-neon hover:text-space btn-sm"
+					class="btn btn-outline text-cyan-300 border-cyan-300 hover:bg-cyan-700 hover:border-cyan-300 btn-sm"
 				>
 					🔄 Play Again
 				</button>
@@ -484,70 +471,9 @@
 			const scoreDisplay = document.getElementById("score");
 			const progressBar = document.getElementById("progressBar");
 			const restartBox = document.getElementById("restartBox");
-			const starsContainer = document.getElementById("stars");
-			const shootingStarsContainer = document.getElementById("shootingStars");
 
 			let score = 0;
 			let index = 0;
-			
-			// Create stars
-			function createStars() {
-				starsContainer.innerHTML = '';
-				const starCount = 150;
-				
-				for (let i = 0; i < starCount; i++) {
-					const star = document.createElement('div');
-					star.classList.add('star');
-					
-					// Random position
-					const x = Math.random() * window.innerWidth;
-					const y = Math.random() * window.innerHeight;
-					
-					// Random size
-					const size = Math.random() * 2 + 1;
-					
-					// Random twinkle animation
-					const twinkleDuration = Math.random() * 5 + 2 + 's';
-					const twinkleOpacity = Math.random() * 0.7 + 0.3;
-					
-					star.style.left = `${x}px`;
-					star.style.top = `${y}px`;
-					star.style.width = `${size}px`;
-					star.style.height = `${size}px`;
-					star.style.setProperty('--twinkle-duration', twinkleDuration);
-					star.style.setProperty('--twinkle-opacity', twinkleOpacity);
-					
-					starsContainer.appendChild(star);
-				}
-			}
-			
-			// Create shooting stars
-			function createShootingStars() {
-				shootingStarsContainer.innerHTML = '';
-				const shootingStarCount = 5;
-				
-				for (let i = 0; i < shootingStarCount; i++) {
-					const shootingStar = document.createElement('div');
-					shootingStar.classList.add('shooting-star');
-					
-					// Random position
-					const y = Math.random() * window.innerHeight;
-					
-					// Random angle
-					const angle = Math.random() * 20 - 10;
-					
-					// Random animation duration and delay
-					const duration = Math.random() * 3 + 2 + 's';
-					const delay = Math.random() * 15 + 's';
-					
-					shootingStar.style.top = `${y}px`;
-					shootingStar.style.setProperty('--shooting-duration', duration);
-					shootingStar.style.setProperty('--shooting-delay', delay);
-					shootingStar.style.setProperty('--shooting-angle', `${angle}deg`);
-					
-					shootingStarsContainer.appendChild(shootingStar);
-				}
-			}
 
 			function showQuestion() {
 				const data = questions[index];
@@ -579,7 +505,6 @@
 					feedback.textContent = "✅ Correct!";
 					feedback.className = "text-sm min-h-12 text-green-300 font-semibold";
 					score++;
-					createShootingStars(); // Create shooting stars for correct answer
 				} else {
 					btn.classList.remove("option-btn");
 					btn.classList.add("incorrect");
@@ -630,20 +555,14 @@
 				}
 				
 				feedback.innerHTML = `
-					<div class="text-center p-4 border border-blue-400 rounded-lg bg-space bg-opacity-70">
-						<p class="text-lg font-bold text-blue-300">Your final score is <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">${score}</span> out of ${questions.length}</p>
+					<div class="text-center p-4 border border-blue-400 rounded-lg bg-opacity-70" style="background-color: rgba(12, 20, 69, 0.7);">
+						<p class="text-lg font-bold text-blue-300">Your final score is <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">${score}</span> out of ${questions.length}</p>
 						<p class="mt-2 text-blue-200">${performanceMsg}</p>
 					</div>
 				`;
 				nextBtn.classList.add("hidden");
 				restartBox.classList.remove("hidden");
 				updateProgress();
-				
-				// Extra celebration for good scores
-				if (percentage >= 70) {
-					createShootingStars();
-					setTimeout(createShootingStars, 2000);
-				}
 			}
 
 			function restartGame() {
@@ -654,19 +573,8 @@
 				showQuestion();
 			}
 			
-			// Initialize
-			createStars();
-			createShootingStars();
+			// Start the game
 			showQuestion();
-			
-			// Recreate stars on window resize
-			window.addEventListener('resize', () => {
-				createStars();
-				createShootingStars();
-			});
-			
-			// Recreate shooting stars periodically
-			setInterval(createShootingStars, 15000);
 		</script>
 	</body>
 </html>
