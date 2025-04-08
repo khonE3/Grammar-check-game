@@ -463,18 +463,19 @@
 
 		<!-- Content -->
 		<div
-			class="fixed inset-0 flex items-center justify-center p-4 sm:p-6 pointer-events-none"
+			class="min-h-screen flex items-center justify-center p-4 sm:p-6 w-full"
 		>
 			<div
-				class="w-full max-w-md card rounded-2xl shadow-xl p-4 sm:p-6 space-y-4 sm:space-y-6 text-white mx-auto pointer-events-auto"
+				class="w-[90%] max-w-md card rounded-2xl shadow-xl p-4 sm:p-6 space-y-4 sm:space-y-6 text-white mx-auto"
 			>
+				<!-- เนื้อหาทั้งหมดของคุณอยู่ที่นี่ -->
 				<div class="text-center space-y-2">
 					<h1
-						class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 text-transparent bg-clip-text glow"
+						class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 text-transparent bg-clip-text glow"
 					>
 						Grammar Galaxy 🚀
 					</h1>
-					<p class="text-sm text-blue-200 console-effect">
+					<p class="text-xs sm:text-sm text-blue-200 console-effect">
 						Choose the correct sentence
 					</p>
 				</div>
@@ -485,12 +486,12 @@
 
 				<div
 					id="questionBox"
-					class="text-lg font-semibold text-white mb-2"
+					class="text-lg sm:text-xl font-semibold text-white mb-2"
 				></div>
 
-				<div id="choices" class="grid gap-4"></div>
+				<div id="choices" class="grid gap-2 sm:gap-4"></div>
 
-				<div id="feedback" class="text-sm min-h-12"></div>
+				<div id="feedback" class="text-xs sm:text-sm min-h-12"></div>
 
 				<div class="flex justify-between items-center">
 					<span id="score" class="text-xs text-blue-200">Score: 0</span>
@@ -507,15 +508,16 @@
 						🔄 Play Again
 					</button>
 				</div>
+
 				<footer
-					class="w-full py-3 px-4 text-center text-sm text-blue-200 z-20 mt-8"
+					class="w-full py-2 sm:py-3 px-2 sm:px-4 text-center text-xs sm:text-sm text-blue-200 z-20 mt-4 sm:mt-8"
 				>
 					<div class="container mx-auto">
 						<div
-							class="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4"
+							class="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-4"
 						>
 							<span>Created by &copy;gotjitag</span>
-							<div class="flex space-x-3">
+							<div class="flex space-x-2 sm:space-x-3">
 								<a
 									href="https://github.com/khonE3"
 									target="_blank"
