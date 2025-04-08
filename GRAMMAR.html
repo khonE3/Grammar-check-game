@@ -1,676 +1,360 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Grammar Check Game</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.4.19/full.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <style>
-        .hidden {
-            display: none;
-        }
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            font-family: 'Nunito', 'Prompt', sans-serif;
-        }
-        .container {
-            flex: 1;
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        /* Duolingo-like styling */
-        .duolingo-container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .duolingo-header {
-            background-color: #58cc02;
-            color: white;
-            border-bottom: 4px solid #46a302;
-        }
-        .duolingo-btn {
-            background-color: #58cc02;
-            color: white;
-            border-bottom: 4px solid #46a302;
-            font-weight: bold;
-            border-radius: 12px;
-            transition: all 0.1s ease;
-        }
-        .duolingo-btn:hover {
-            background-color: #61dd00;
-            transform: translateY(-2px);
-        }
-        .duolingo-btn:active {
-            border-bottom-width: 2px;
-            transform: translateY(2px);
-        }
-        .duolingo-btn-disabled {
-            background-color: #e5e5e5;
-            border-bottom-color: #cccccc;
-            color: #afafaf;
-        }
-        .option-btn {
-            background-color: white;
-            border: 2px solid #e5e5e5;
-            color: #4b4b4b;
-            font-weight: bold;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .option-btn:hover {
-            background-color: #f7f7f7;
-            border-color: #d9d9d9;
-        }
-        .option-btn-correct {
-            background-color: #d7ffb8;
-            border-color: #58cc02;
-            color: #58cc02;
-        }
-        .option-btn-wrong {
-            background-color: #ffdfe0;
-            border-color: #ea2b2b;
-            color: #ea2b2b;
-        }
-        .progress-container {
-            height: 16px;
-            background-color: #e5e5e5;
-            border-radius: 8px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            background-color: #58cc02;
-            transition: width 0.3s ease;
-        }
-        .heart-container {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .heart {
-            color: #ff4b4b;
-            font-size: 1.5rem;
-        }
-        .shake {
-            animation: shake 0.5s;
-        }
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            10% { transform: translateX(-5px); }
-            20% { transform: translateX(5px); }
-            30% { transform: translateX(-5px); }
-            40% { transform: translateX(5px); }
-            50% { transform: translateX(-5px); }
-            60% { transform: translateX(5px); }
-            70% { transform: translateX(-5px); }
-            80% { transform: translateX(5px); }
-            90% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
-        }
-        .error-notification {
-            background-color: #ffdfe0;
-            border: 2px solid #ea2b2b;
-            color: #ea2b2b;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
-            font-weight: bold;
-            animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .success-notification {
-            background-color: #d7ffb8;
-            border: 2px solid #58cc02;
-            color: #58cc02;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
-            font-weight: bold;
-            animation: slideIn 0.3s ease;
-        }
-        .character {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
-        }
-        /* Owl character (Duolingo mascot approximation) */
-        .owl {
-            background-color: #7ac70c;
-            border-radius: 50%;
-            position: relative;
-            margin: 20px auto;
-        }
-        .owl::before {
-            content: "";
-            position: absolute;
-            width: 90%;
-            height: 90%;
-            background-color: white;
-            border-radius: 50%;
-            top: 5%;
-            left: 5%;
-        }
-        .owl-eyes {
-            position: absolute;
-            width: 100%;
-            top: 35%;
-            display: flex;
-            justify-content: space-evenly;
-            z-index: 1;
-        }
-        .owl-eye {
-            width: 28px;
-            height: 28px;
-            background-color: #4b4b4b;
-            border-radius: 50%;
-            position: relative;
-        }
-        .owl-eye::before {
-            content: "";
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: white;
-            border-radius: 50%;
-            top: 5px;
-            left: 5px;
-        }
-        .owl-beak {
-            position: absolute;
-            width: 24px;
-            height: 16px;
-            background-color: #ffb100;
-            border-radius: 0 0 12px 12px;
-            bottom: 30%;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
-    <div class="duolingo-header w-full shadow-lg py-4">
-        <div class="duolingo-container px-4 flex justify-between items-center">
-            <div class="text-2xl font-bold">GrammarCheck</div>
-            <div class="flex gap-4 items-center">
-                <div class="heart-container">
-                    <span class="heart">❤️</span>
-                    <span id="hearts-count">5</span>
-                </div>
-                <button id="language-toggle" class="px-3 py-1 bg-white text-green-600 rounded-full text-sm font-bold">ไทย</button>
-                <button id="theme-toggle" class="px-3 py-1 bg-white text-green-600 rounded-full text-sm font-bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Grammar Galaxy</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/daisyui@4.4.12/dist/full.css"
+			rel="stylesheet"
+			type="text/css"
+		/>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						fontFamily: {
+							prompt: ["Prompt", "sans-serif"],
+						},
+						colors: {
+							primary: "#4d83ff",
+							space: "#0c1445",
+						},
+					},
+				},
+			};
+		</script>
+		<style>
+			body {
+				font-family: "Prompt", sans-serif;
+				background-color: #0c1445;
+				background-image: radial-gradient(
+						white,
+						rgba(255, 255, 255, 0.2) 2px,
+						transparent 40px
+					),
+					radial-gradient(
+						white,
+						rgba(255, 255, 255, 0.15) 1px,
+						transparent 30px
+					),
+					radial-gradient(white, rgba(255, 255, 255, 0.1) 2px, transparent 40px);
+				background-size: 550px 550px, 350px 350px, 250px 250px;
+				background-position: 0 0, 40px 60px, 130px 270px;
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+			}
 
-    <div class="container mx-auto px-4 py-8">
-        <!-- Welcome Screen -->
-        <div id="welcome-screen" class="duolingo-container bg-white rounded-3xl shadow-md p-6 fade-in">
-            <div class="character owl">
-                <div class="owl-eyes">
-                    <div class="owl-eye"></div>
-                    <div class="owl-eye"></div>
-                </div>
-                <div class="owl-beak"></div>
-            </div>
-            <h2 class="text-3xl font-bold text-center mb-4" id="welcome-title">เกมทดสอบไวยากรณ์ภาษาอังกฤษ</h2>
-            <p id="welcome-text" class="text-center text-gray-600 mb-8">ทดสอบความรู้ไวยากรณ์ภาษาอังกฤษของคุณด้วยคำถามสุ่มจากอินเทอร์เน็ต เลือกคำตอบที่ถูกต้องและดูผลลัพธ์ทันที!</p>
-            <div class="flex justify-center">
-                <button class="duolingo-btn py-3 px-10 text-xl" id="start-button">เริ่มเกม</button>
-            </div>
-        </div>
+			.option-btn {
+				transition: all 0.3s ease;
+				position: relative;
+				overflow: hidden;
+			}
 
-        <!-- Game Screen -->
-        <div id="game-screen" class="duolingo-container hidden">
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
-            </div>
-            
-            <div class="bg-white rounded-3xl shadow-md p-6 mb-6 fade-in">
-                <h2 class="text-xl font-bold mb-4" id="question-title">คำถาม</h2>
-                <p id="question-text" class="text-lg mb-6"></p>
-                <div id="options" class="flex flex-col gap-2">
-                    <!-- Options will be inserted here -->
-                </div>
-                
-                <div id="error-notification" class="error-notification hidden">
-                    <p id="error-text">คำตอบไม่ถูกต้อง</p>
-                </div>
-                
-                <div id="success-notification" class="success-notification hidden">
-                    <p id="success-text">ถูกต้อง!</p>
-                </div>
-                
-                <div id="tip-container" class="bg-blue-50 border-2 border-blue-300 text-blue-800 rounded-xl p-4 mt-4 hidden">
-                    <h3 class="font-bold mb-1" id="tip-title">เคล็ดลับ</h3>
-                    <p id="tip-text" class="text-sm"></p>
-                </div>
-            </div>
+			.option-btn::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: -100%;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(
+					90deg,
+					transparent,
+					rgba(255, 255, 255, 0.2),
+					transparent
+				);
+				transition: 0.5s;
+			}
 
-            <div class="flex justify-center gap-4">
-                <button id="next-button" class="duolingo-btn py-3 px-10 text-xl hidden">ไปต่อ</button>
-                <button id="quit-button" class="py-3 px-10 text-xl bg-gray-200 text-gray-600 font-bold rounded-xl border-b-4 border-gray-300 hidden">พอแค่นี้</button>
-            </div>
-            
-            <div class="flex justify-between items-center mt-6">
-                <div class="text-lg font-bold">
-                    <span id="score-title">คะแนน</span>: <span id="score" class="text-green-600">0</span>
-                </div>
-                <div class="text-lg">
-                    <span id="questions-title">คำถาม</span>: <span id="question-count">0</span>/<span id="total-available">10</span>
-                </div>
-            </div>
-        </div>
+			.option-btn:hover::before {
+				left: 100%;
+			}
 
-        <!-- End Screen -->
-        <div id="end-screen" class="duolingo-container bg-white rounded-3xl shadow-md p-6 hidden">
-            <div class="character owl">
-                <div class="owl-eyes">
-                    <div class="owl-eye"></div>
-                    <div class="owl-eye"></div>
-                </div>
-                <div class="owl-beak"></div>
-            </div>
-            <h2 class="text-3xl font-bold text-center mb-4" id="end-title">เยี่ยมมาก!</h2>
-            <p id="end-text" class="text-center text-gray-600 mb-8">คุณได้คะแนน <span id="final-score" class="text-green-600 font-bold">0</span> จาก <span id="total-questions" class="font-bold">0</span> คำถาม</p>
-            <div class="flex justify-center">
-                <button class="duolingo-btn py-3 px-10 text-xl" id="play-again-button">เล่นอีกครั้ง</button>
-            </div>
-        </div>
-    </div>
+			.progress-container {
+				width: 100%;
+				background-color: rgba(255, 255, 255, 0.2);
+				border-radius: 999px;
+				overflow: hidden;
+			}
 
-    <footer class="bg-gray-200 py-4 mt-auto">
-        <div class="duolingo-container px-4 text-center text-gray-600">
-            <p id="footer-text">สร้างด้วย ❤️ สำหรับผู้ที่ต้องการพัฒนาไวยากรณ์ภาษาอังกฤษ</p>
-        </div>
-    </footer>
+			.progress-bar {
+				height: 8px;
+				background: linear-gradient(90deg, #4d83ff, #00d4ff);
+				border-radius: 999px;
+				transition: width 0.3s ease;
+			}
 
-    <script>
-        // Define game data
-        const grammarQuestions = [
-            {
-                question: "Which sentence is grammatically correct?",
-                options: [
-                    "She don't like ice cream.",
-                    "She doesn't likes ice cream.",
-                    "She doesn't like ice cream.",
-                    "She not like ice cream."
-                ],
-                correctAnswer: 2,
-                tip: "For third person singular (he/she/it) in present simple negative, use 'doesn't' + base form of the verb."
-            },
-            {
-                question: "Choose the correct sentence:",
-                options: [
-                    "I have been to Paris last year.",
-                    "I went to Paris last year.",
-                    "I have gone to Paris last year.",
-                    "I had been going to Paris last year."
-                ],
-                correctAnswer: 1,
-                tip: "For specific completed actions in the past with a specific time reference, use simple past tense."
-            },
-            {
-                question: "Which sentence uses the correct form of the comparative?",
-                options: [
-                    "This book is more better than the other one.",
-                    "This book is better than the other one.",
-                    "This book is gooder than the other one.",
-                    "This book is the better than the other one."
-                ],
-                correctAnswer: 1,
-                tip: "For one-syllable adjectives, add '-er' for the comparative form. Don't use 'more' with '-er' forms."
-            },
-            {
-                question: "Identify the sentence with correct subject-verb agreement:",
-                options: [
-                    "The team are playing well.",
-                    "The team is playing well.",
-                    "The team be playing well.",
-                    "The team were playing well."
-                ],
-                correctAnswer: 1,
-                tip: "In American English, collective nouns like 'team' are usually treated as singular and take singular verbs."
-            },
-            {
-                question: "Choose the grammatically correct sentence:",
-                options: [
-                    "If I would have known, I would have told you.",
-                    "If I would know, I would tell you.",
-                    "If I had known, I would have told you.",
-                    "If I have known, I would told you."
-                ],
-                correctAnswer: 2,
-                tip: "For third conditional (impossible past situations), use 'If + past perfect, would + have + past participle'."
-            },
-            {
-                question: "Which sentence uses the correct preposition?",
-                options: [
-                    "She's afraid from spiders.",
-                    "She's afraid at spiders.",
-                    "She's afraid of spiders.",
-                    "She's afraid on spiders."
-                ],
-                correctAnswer: 2,
-                tip: "The correct preposition to use with 'afraid' is 'of'."
-            },
-            {
-                question: "Which sentence has correct punctuation?",
-                options: [
-                    "John who is my brother lives in London.",
-                    "John, who is my brother lives in London.",
-                    "John who is my brother, lives in London.",
-                    "John, who is my brother, lives in London."
-                ],
-                correctAnswer: 3,
-                tip: "Non-restrictive relative clauses, which provide additional information, should be separated by commas on both sides."
-            },
-            {
-                question: "Select the sentence with the correct article usage:",
-                options: [
-                    "She is an university student.",
-                    "She is a university student.",
-                    "She is the university student.",
-                    "She is university student."
-                ],
-                correctAnswer: 1,
-                tip: "Use 'a' before words that begin with a consonant sound. 'University' begins with a consonant 'y' sound, not a vowel sound."
-            },
-            {
-                question: "Which sentence uses the correct verb tense?",
-                options: [
-                    "I am living in this city since 2010.",
-                    "I have been living in this city since 2010.",
-                    "I live in this city since 2010.",
-                    "I had lived in this city since 2010."
-                ],
-                correctAnswer: 1,
-                tip: "For actions that started in the past and continue to the present, use present perfect continuous with 'since' or 'for'."
-            },
-            {
-                question: "Choose the correct passive voice construction:",
-                options: [
-                    "The letter wrote by John.",
-                    "The letter was written by John.",
-                    "The letter was wrote by John.",
-                    "The letter is write by John."
-                ],
-                correctAnswer: 1,
-                tip: "In passive voice, use the appropriate form of 'be' + past participle. The past participle of 'write' is 'written'."
-            }
-        ];
+			.card {
+				background: rgba(23, 45, 104, 0.8);
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(122, 179, 255, 0.3);
+			}
 
-        // Translations
-        const translations = {
-            'th': {
-                'welcomeTitle': 'เกมทดสอบไวยากรณ์ภาษาอังกฤษ',
-                'welcomeText': 'ทดสอบความรู้ไวยากรณ์ภาษาอังกฤษของคุณด้วยคำถามสุ่มจากอินเทอร์เน็ต เลือกคำตอบที่ถูกต้องและดูผลลัพธ์ทันที!',
-                'startButton': 'เริ่มเกม',
-                'scoreTitle': 'คะแนน',
-                'questionsTitle': 'คำถาม',
-                'questionTitle': 'คำถาม',
-                'tipTitle': 'เคล็ดลับ',
-                'nextButton': 'ไปต่อ',
-                'quitButton': 'พอแค่นี้',
-                'endTitle': 'เยี่ยมมาก!',
-                'endText': 'คุณได้คะแนน <span id="final-score" class="text-green-600 font-bold">0</span> จาก <span id="total-questions" class="font-bold">0</span> คำถาม',
-                'playAgainButton': 'เล่นอีกครั้ง',
-                'footerText': 'สร้างด้วย ❤️ สำหรับผู้ที่ต้องการพัฒนาไวยากรณ์ภาษาอังกฤษ',
-                'correct': 'ถูกต้อง! 🎉',
-                'incorrect': 'ไม่ถูกต้อง 😢',
-                'incorrectAnswer': 'คำตอบที่ถูกต้องคือ: ',
-                'languageToggle': 'EN',
-                'errorText': 'คำตอบไม่ถูกต้อง! ลองอีกครั้ง',
-                'successText': 'ยอดเยี่ยม! คำตอบถูกต้อง'
-            },
-            'en': {
-                'welcomeTitle': 'English Grammar Check Game',
-                'welcomeText': 'Test your English grammar knowledge with random questions from the internet. Choose the correct answer and see the results immediately!',
-                'startButton': 'Start Game',
-                'scoreTitle': 'Score',
-                'questionsTitle': 'Questions',
-                'questionTitle': 'Question',
-                'tipTitle': 'Tip',
-                'nextButton': 'Continue',
-                'quitButton': 'Quit',
-                'endTitle': 'Great job!',
-                'endText': 'You scored <span id="final-score" class="text-green-600 font-bold">0</span> out of <span id="total-questions" class="font-bold">0</span> questions',
-                'playAgainButton': 'Play Again',
-                'footerText': 'Made with ❤️ for English grammar learners',
-                'correct': 'Correct! 🎉',
-                'incorrect': 'Incorrect 😢',
-                'incorrectAnswer': 'The correct answer is: ',
-                'languageToggle': 'ไทย',
-                'errorText': 'Incorrect answer! Try again',
-                'successText': 'Great! Correct answer'
-            }
-        };
+			.correct {
+				background: rgba(5, 122, 85, 0.8);
+				border: 1px solid rgba(72, 187, 120, 0.5);
+				color: white;
+			}
 
-        // Game state
-        let currentQuestion = {};
-        let score = 0;
-        let questionCount = 0;
-        let hearts = 5;
-        let usedQuestions = [];
-        let currentLanguage = 'th';
+			.incorrect {
+				background: rgba(176, 42, 55, 0.8);
+				border: 1px solid rgba(245, 101, 101, 0.5);
+				color: white;
+			}
 
-        // DOM Elements
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const gameScreen = document.getElementById('game-screen');
-        const endScreen = document.getElementById('end-screen');
-        const startButton = document.getElementById('start-button');
-        const scoreElement = document.getElementById('score');
-        const questionCountElement = document.getElementById('question-count');
-        const totalAvailableElement = document.getElementById('total-available');
-        const questionText = document.getElementById('question-text');
-        const optionsContainer = document.getElementById('options');
-        const errorNotification = document.getElementById('error-notification');
-        const errorText = document.getElementById('error-text');
-        const successNotification = document.getElementById('success-notification');
-        const successText = document.getElementById('success-text');
-        const tipContainer = document.getElementById('tip-container');
-        const tipText = document.getElementById('tip-text');
-        const nextButton = document.getElementById('next-button');
-        const quitButton = document.getElementById('quit-button');
-        const finalScore = document.getElementById('final-score');
-        const totalQuestions = document.getElementById('total-questions');
-        const playAgainButton = document.getElementById('play-again-button');
-        const languageToggle = document.getElementById('language-toggle');
-        const themeToggle = document.getElementById('theme-toggle');
-        const progressBar = document.getElementById('progress-bar');
-        const heartsCount = document.getElementById('hearts-count');
+			.btn-primary {
+				background: linear-gradient(135deg, #4d83ff, #00d4ff);
+				border: none;
+			}
 
-        // Initialize the game
-        function initGame() {
-            updateLanguage();
-            totalAvailableElement.textContent = grammarQuestions.length;
-            startButton.addEventListener('click', startGame);
-            nextButton.addEventListener('click', nextQuestion);
-            quitButton.addEventListener('click', endGame);
-            playAgainButton.addEventListener('click', restartGame);
-            languageToggle.addEventListener('click', toggleLanguage);
-            themeToggle.addEventListener('click', toggleTheme);
-        }
+			.btn-primary:hover {
+				background: linear-gradient(135deg, #3b64c5, #00a8cc);
+			}
+		</style>
+	</head>
+	<body class="flex items-center justify-center p-4">
+		<div
+			class="w-full max-w-md card rounded-2xl shadow-xl p-6 space-y-6 text-white"
+		>
+			<div class="text-center space-y-2">
+				<h1 class="text-2xl font-bold text-primary">Grammar Galaxy 🚀</h1>
+				<p class="text-sm text-gray-300">Choose the correct sentence</p>
+			</div>
 
-        // Start the game
-        function startGame() {
-            welcomeScreen.classList.add('hidden');
-            gameScreen.classList.remove('hidden');
-            score = 0;
-            questionCount = 0;
-            hearts = 5;
-            usedQuestions = [];
-            heartsCount.textContent = hearts;
-            updateScoreDisplay();
-            updateProgressBar();
-            nextQuestion();
-        }
+			<div class="progress-container">
+				<div id="progressBar" class="progress-bar" style="width: 0%"></div>
+			</div>
 
-        // Update progress bar
-        function updateProgressBar() {
-            const progress = (questionCount / grammarQuestions.length) * 100;
-            progressBar.style.width = `${progress}%`;
-        }
+			<div id="questionBox" class="text-lg font-semibold text-white"></div>
 
-        // Load the next question
-        function nextQuestion() {
-            // Hide notifications and buttons
-            errorNotification.classList.add('hidden');
-            successNotification.classList.add('hidden');
-            tipContainer.classList.add('hidden');
-            nextButton.classList.add('hidden');
-            quitButton.classList.add('hidden');
+			<div id="choices" class="grid gap-4"></div>
 
-            // Check if game should end
-            if (usedQuestions.length >= grammarQuestions.length || hearts <= 0) {
-                endGame();
-                return;
-            }
+			<div id="feedback" class="text-sm"></div>
 
-            // Get a random unused question
-            let randomIndex;
-            do {
-                randomIndex = Math.floor(Math.random() * grammarQuestions.length);
-            } while (usedQuestions.includes(randomIndex));
-            
-            usedQuestions.push(randomIndex);
-            currentQuestion = grammarQuestions[randomIndex];
-            questionCount++;
-            
-            // Update UI
-            questionText.textContent = currentQuestion.question;
-            updateScoreDisplay();
-            updateProgressBar();
-            
-            // Clear and populate options
-            optionsContainer.innerHTML = '';
-            currentQuestion.options.forEach((option, index) => {
-                const button = document.createElement('button');
-                button.classList.add('option-btn', 'py-3', 'px-4', 'w-full', 'text-left');
-                button.textContent = option;
-                button.addEventListener('click', () => checkAnswer(index));
-                optionsContainer.appendChild(button);
-            });
-        }
+			<div class="flex justify-between items-center">
+				<span id="score" class="text-xs">Score: 0</span>
+				<button id="nextBtn" class="btn btn-primary btn-sm hidden">Next</button>
+			</div>
 
-        // Check the selected answer
-        function checkAnswer(selectedIndex) {
-            const optionButtons = optionsContainer.querySelectorAll('button');
-            optionButtons.forEach(button => button.disabled = true);
-            const selectedButton = optionButtons[selectedIndex];
+			<div class="text-center mt-4 hidden" id="restartBox">
+				<button
+					onclick="restartGame()"
+					class="btn btn-outline btn-accent btn-sm"
+				>
+					🔄 Play Again
+				</button>
+			</div>
+		</div>
 
-            if (selectedIndex === currentQuestion.correctAnswer) {
-                score++;
-                selectedButton.classList.add('option-btn-correct');
-                successNotification.classList.remove('hidden');
-                successText.textContent = translations[currentLanguage].successText;
-                tipContainer.classList.remove('hidden');
-                tipText.textContent = currentQuestion.tip;
-            } else {
-                hearts--;
-                heartsCount.textContent = hearts;
-                gameScreen.classList.add('shake');
-                setTimeout(() => gameScreen.classList.remove('shake'), 500);
-                selectedButton.classList.add('option-btn-wrong');
-                optionButtons[currentQuestion.correctAnswer].classList.add('option-btn-correct');
-                errorNotification.classList.remove('hidden');
-                errorText.textContent = `${translations[currentLanguage].errorText} (${translations[currentLanguage].incorrectAnswer} "${currentQuestion.options[currentQuestion.correctAnswer]}")`;
-                tipContainer.classList.remove('hidden');
-                tipText.textContent = currentQuestion.tip;
-            }
+		<script>
+			const questions = [
+				{
+					question: "Which sentence is grammatically correct?",
+					choices: [
+						"He don't like pizza.",
+						"He doesn't likes pizza.",
+						"He doesn't like pizza.",
+						"He don't likes pizza.",
+					],
+					answer: "He doesn't like pizza.",
+					explanation: "'He' requires 'doesn't' and base verb 'like'.",
+				},
+				{
+					question: "Choose the correct sentence.",
+					choices: [
+						"She going to the market.",
+						"She go to the market.",
+						"She goes to the market.",
+						"She gone to the market.",
+					],
+					answer: "She goes to the market.",
+					explanation: "'She' uses 'goes' in present simple.",
+				},
+				{
+					question: "Select the correct form:",
+					choices: [
+						"I has a car.",
+						"I have a car.",
+						"I having a car.",
+						"I had a car now.",
+					],
+					answer: "I have a car.",
+					explanation: "'I' takes 'have' in present simple.",
+				},
+				{
+					question: "Which is correct?",
+					choices: [
+						"They is happy.",
+						"They are happy.",
+						"They am happy.",
+						"They be happy.",
+					],
+					answer: "They are happy.",
+					explanation: "'They' uses 'are' as the correct verb.",
+				},
+				{
+					question: "Pick the correct sentence:",
+					choices: [
+						"We was playing football.",
+						"We were playing football.",
+						"We playing football.",
+						"We has played football.",
+					],
+					answer: "We were playing football.",
+					explanation: "'We' uses 'were' in past continuous.",
+				},
+				{
+					question: "Which sentence is right?",
+					choices: [
+						"He didn't went to school.",
+						"He doesn't went to school.",
+						"He didn't go to school.",
+						"He don't go to school.",
+					],
+					answer: "He didn't go to school.",
+					explanation: "After 'didn't', use base verb 'go'.",
+				},
+				{
+					question: "Choose the correct one:",
+					choices: [
+						"It's cold, isn't it?",
+						"It's cold, isn't he?",
+						"It's cold, is it?",
+						"It's cold, is he?",
+					],
+					answer: "It's cold, isn't it?",
+					explanation: "Use 'isn't it' for weather/neutral statements.",
+				},
+				{
+					question: "Which is grammatically correct?",
+					choices: [
+						"Neither of them are ready.",
+						"Neither of them is ready.",
+						"Neither are them ready.",
+						"Neither them is ready.",
+					],
+					answer: "Neither of them is ready.",
+					explanation: "'Neither' takes singular verb 'is'.",
+				},
+				{
+					question: "Choose the best sentence:",
+					choices: [
+						"She can sings well.",
+						"She cans sing well.",
+						"She can sing well.",
+						"She can singing well.",
+					],
+					answer: "She can sing well.",
+					explanation: "Modal verbs take base verb without -s.",
+				},
+				{
+					question: "Pick the correct sentence:",
+					choices: [
+						"I am agree with you.",
+						"I agree with you.",
+						"I agrees with you.",
+						"I am agreeing with you.",
+					],
+					answer: "I agree with you.",
+					explanation: "'Agree' is a stative verb, no need for 'am'.",
+				},
+			];
 
-            nextButton.classList.remove('hidden');
-            quitButton.classList.remove('hidden');
-            updateScoreDisplay();
-        }
+			const questionBox = document.getElementById("questionBox");
+			const choicesDiv = document.getElementById("choices");
+			const feedback = document.getElementById("feedback");
+			const nextBtn = document.getElementById("nextBtn");
+			const scoreDisplay = document.getElementById("score");
+			const progressBar = document.getElementById("progressBar");
+			const restartBox = document.getElementById("restartBox");
 
-        // End the game
-        function endGame() {
-            gameScreen.classList.add('hidden');
-            endScreen.classList.remove('hidden');
-            finalScore.textContent = score;
-            totalQuestions.textContent = questionCount;
-        }
+			let score = 0;
+			let index = 0;
 
-        // Restart the game
-        function restartGame() {
-            endScreen.classList.add('hidden');
-            startGame();
-        }
+			function showQuestion() {
+				const data = questions[index];
+				questionBox.textContent = `Q${index + 1}. ${data.question}`;
+				feedback.textContent = "";
+				nextBtn.classList.add("hidden");
 
-        // Update score display
-        function updateScoreDisplay() {
-            scoreElement.textContent = score;
-            questionCountElement.textContent = questionCount;
-            totalAvailableElement.textContent = grammarQuestions.length;
-        }
+				choicesDiv.innerHTML = "";
+				data.choices.forEach((choice) => {
+					const btn = document.createElement("button");
+					btn.textContent = choice;
+					btn.className =
+						"btn btn-outline btn-block text-base font-medium normal-case option-btn";
+					btn.onclick = () => checkAnswer(choice, btn, data);
+					choicesDiv.appendChild(btn);
+				});
 
-        // Toggle language
-        function toggleLanguage() {
-            currentLanguage = currentLanguage === 'th' ? 'en' : 'th';
-            updateLanguage();
-        }
+				updateProgress();
+			}
 
-        // Update UI with selected language
-        function updateLanguage() {
-            document.getElementById('welcome-title').textContent = translations[currentLanguage].welcomeTitle;
-            document.getElementById('welcome-text').textContent = translations[currentLanguage].welcomeText;
-            document.getElementById('start-button').textContent = translations[currentLanguage].startButton;
-            document.getElementById('score-title').textContent = translations[currentLanguage].scoreTitle;
-            document.getElementById('questions-title').textContent = translations[currentLanguage].questionsTitle;
-            document.getElementById('question-title').textContent = translations[currentLanguage].questionTitle;
-            document.getElementById('tip-title').textContent = translations[currentLanguage].tipTitle;
-            document.getElementById('next-button').textContent = translations[currentLanguage].nextButton;
-            document.getElementById('quit-button').textContent = translations[currentLanguage].quitButton;
-            document.getElementById('end-title').textContent = translations[currentLanguage].endTitle;
-            document.getElementById('end-text').innerHTML = translations[currentLanguage].endText;
-            document.getElementById('play-again-button').textContent = translations[currentLanguage].playAgainButton;
-            document.getElementById('footer-text').textContent = translations[currentLanguage].footerText;
-            document.getElementById('language-toggle').textContent = translations[currentLanguage].languageToggle;
-            
-            errorText.textContent = translations[currentLanguage].errorText;
-            successText.textContent = translations[currentLanguage].successText;
+			function checkAnswer(choice, btn, data) {
+				const allButtons = choicesDiv.querySelectorAll("button");
+				allButtons.forEach((b) => (b.disabled = true));
 
-            if (!endScreen.classList.contains('hidden')) {
-                finalScore.textContent = score;
-                totalQuestions.textContent = questionCount;
-            }
-        }
+				if (choice === data.answer) {
+					btn.classList.remove("btn-outline");
+					btn.classList.add("correct");
+					feedback.textContent = "✅ Correct!";
+					score++;
+				} else {
+					btn.classList.remove("btn-outline");
+					btn.classList.add("incorrect");
+					feedback.textContent = `❌ Incorrect. Tip: ${data.explanation}`;
 
-        // Toggle theme (light/dark)
-        function toggleTheme() {
-            const html = document.querySelector('html');
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme); // Persist theme choice
-        }
+					allButtons.forEach((b) => {
+						if (b.textContent === data.answer) {
+							b.classList.remove("btn-outline");
+							b.classList.add("correct");
+						}
+					});
+				}
 
-        // Load saved theme on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.querySelector('html').setAttribute('data-theme', savedTheme);
-            initGame();
-        });
-    </script>
-</body>
+				scoreDisplay.textContent = `Score: ${score}`;
+				nextBtn.classList.remove("hidden");
+			}
+
+			function updateProgress() {
+				const progress = (index / questions.length) * 100;
+				progressBar.style.width = `${progress}%`;
+			}
+
+			nextBtn.onclick = () => {
+				index++;
+				if (index < questions.length) {
+					showQuestion();
+				} else {
+					endGame();
+				}
+			};
+
+			function endGame() {
+				questionBox.textContent = "🌟 Game Over!";
+				choicesDiv.innerHTML = "";
+				feedback.innerHTML = `<p>Your final score is <strong>${score}</strong> out of ${questions.length}</p>`;
+				nextBtn.classList.add("hidden");
+				restartBox.classList.remove("hidden");
+				updateProgress();
+			}
+
+			function restartGame() {
+				index = 0;
+				score = 0;
+				restartBox.classList.add("hidden");
+				scoreDisplay.textContent = "Score: 0";
+				showQuestion();
+			}
+
+			showQuestion();
+		</script>
+	</body>
 </html>
